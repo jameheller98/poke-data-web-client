@@ -1,0 +1,23 @@
+.sider-fade {
+  &::before {
+    content: '';
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 0;
+
+    @apply bg-gray-900 bg-opacity-25 h-screen w-screen transition-opacity;
+  }
+}
+
+.sider-fade-0 {
+  &::before {
+    content: '';
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 0;
+
+    @apply bg-gray-900 bg-opacity-0 h-screen w-0 transition-opacity;
+  }
+}
