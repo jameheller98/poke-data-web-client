@@ -32,7 +32,7 @@ const ListRegion: React.FC = () => {
         <div className="animate-pulse m-auto mt-4 h-5 w-40 text-2xl font-semibold bg-gray-300 rounded-2xl shadow-btn" />
       </div>
     ));
-    return <div className="grid grid-cols-2 gap-4 p-3 fixed">{listLoadingItem}</div>;
+    return <div className="grid grid-cols-2 gap-4 p-3 bg-gray-100 fixed">{listLoadingItem}</div>;
   }
 
   if (error) {

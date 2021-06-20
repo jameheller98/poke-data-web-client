@@ -4,7 +4,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 0;
+    z-index: 10;
 
     @apply bg-gray-900 bg-opacity-25 h-screen w-screen transition-opacity;
   }
@@ -16,7 +16,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 0;
+    z-index: 10;
 
     @apply bg-gray-900 bg-opacity-0 h-screen w-0 transition-opacity;
   }

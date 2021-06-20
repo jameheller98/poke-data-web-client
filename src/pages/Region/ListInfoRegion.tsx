@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fetchDetailRegions, selectDataRegion } from './RegionSlice';
+import { useHistory, useParams } from 'react-router-dom';
+import { fetchDetailRegions, selectDataRegion, setSearchValue } from './RegionSlice';
 import Error from '../Error';
-import { ChevronRightIcon } from '@heroicons/react/solid';
+import { ReplyIcon, SearchIcon, XIcon } from '@heroicons/react/solid';
 import propTypes from 'prop-types';
 import React from 'react';
 
 const ListInfoRegion: React.FC = () => {
+  const history = useHistory();
   const { name }: { name: string } = useParams();
   const loading = useSelector((state: { region: { loading: boolean } }) => state.region.loading);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,6 +16,7 @@ const ListInfoRegion: React.FC = () => {
   const idRegion = useSelector((state: { region: { data: { id: number } } }) => state.region.data.id);
   const imageData = useSelector((state: { region: { imageData: [] } }) => state.region.imageData);
   const dataInfoRegion = useSelector(selectDataRegion);
+  const searchValue = useSelector((state: { region: { searchValue: string } }) => state.region.searchValue);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,7 +24,25 @@ const ListInfoRegion: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>...</div>;
+    const listLoadingItem = [...Array(8)].map((_, index) => (
+      <ListViewItem
+        key={index}
+        name={<div className="animate-pulse h-5 mt-4 w-10/12 bg-gray-300 rounded-2xl shadow-btn mb-4" />}
+      />
+    ));
+    return (
+      <div className="p-3 pt-16 w-full fixed bg-gray-50">
+        <div className="animate-pulse h-64 w-full bg-gray-300 rounded-2xl shadow-btn" />
+        <div className="animate-pulse h-8 mt-6 w-2/6 bg-gray-300 rounded-2xl shadow-btn" />
+        <div className="animate-pulse h-8 mt-4 w-3/6 bg-gray-300 rounded-2xl shadow-btn" />
+        <TableView
+          data={listLoadingItem}
+          title={<div className="animate-pulse h-4 mt-1 mb-2 w-1/3 bg-gray-300 rounded-2xl shadow-btn m-auto" />}
+          colorTitle="bg-indigo-100 text-indigo-900"
+          gridCols="grid-cols-2"
+        />
+      </div>
+    );
   }
   if (error) {
     return <Error error={error} />;
@@ -33,21 +53,26 @@ const ListInfoRegion: React.FC = () => {
       <ListViewItem key={index} name={item.name} />
     )) || [];
 
-  const location =
-    dataInfoRegion.locations?.map((item: { name: string }, index: number) => (
-      <ListViewItem key={index} name={item.name} />
-    )) || [];
+  const location = searchValue
+    ? dataInfoRegion.locations
+        ?.filter((item: { name: string }) => item.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
+        .map((item: { name: string }, index: number) => <ListViewItem key={index} name={item.name} />) || []
+    : dataInfoRegion.locations?.map((item: { name: string }, index: number) => (
+        <ListViewItem key={index} name={item.name} />
+      )) || [];
 
   const pokedex =
     dataInfoRegion.pokedexes?.map((item: { name: string }, index: number) => (
       <ListViewItem key={index} name={item.name} />
     )) || [];
-  console.log(location);
-  console.log(dataInfoRegion);
+
   return (
     <>
       <div>
-        <div className="p-3">
+        <div className="block px-6 pt-3">
+          <ReplyIcon className="w-10 text-gray-500" onClick={() => history.goBack()} />
+        </div>
+        <div className="block p-3">
           <img className="rounded-lg shadow-btn" src={imageData[idRegion - 1]} />
           <div className="pt-2">
             <div className="text-3xl text-black capitalize font-bold pt-1">
@@ -90,13 +115,15 @@ const ListInfoRegion: React.FC = () => {
 
 const TableView: React.FC<{
   data: JSX.Element[];
-  title: string;
+  title: React.ReactNode;
   colorTitle: string;
   gridCols: string;
   height?: string;
 }> = ({ data, title, colorTitle, gridCols, height = 'h-fit-content' }) => {
   return (
-    <div className={`grid ${gridCols} gap-y-3 mt-5 text-lg bg-gray-50 bg-opacity-90 pb-3 ${height} shadow-md`}>
+    <div
+      className={`grid ${gridCols} gap-y-5 mt-5 text-lg bg-gray-50 bg-opacity-90 pb-5 ${height} shadow-md rounded-t-lg`}
+    >
       <div
         className={`${
           gridCols === 'grid-cols-1' ? '' : 'col-start-1 col-end-3 '
@@ -104,6 +131,7 @@ const TableView: React.FC<{
       >
         {title}
       </div>
+      {title === 'Location' ? <SearchLocation /> : null}
       {data.length ? (
         data
       ) : (
@@ -115,23 +143,48 @@ const TableView: React.FC<{
 
 TableView.propTypes = {
   data: propTypes.array.isRequired,
-  title: propTypes.string.isRequired,
+  title: propTypes.node.isRequired,
   colorTitle: propTypes.string.isRequired,
   gridCols: propTypes.string.isRequired,
   height: propTypes.string,
 };
 
-const ListViewItem: React.FC<{ name: string }> = ({ name }) => {
+const ListViewItem: React.FC<{ name: React.ReactNode }> = ({ name }) => {
   return (
-    <span className="text-gray-600 capitalize flex items-center">
-      <ChevronRightIcon className="w-4 inline-block text-gray-600" />
-      {name}
+    <span className={`text-gray-600 capitalize flex items-center pl-3`}>
+      {/* <ChevronRightIcon className="w-4 inline-block text-gray-600 mr-1" /> */}
+      <span className="inline-block">{name}</span>
     </span>
   );
 };
 
 ListViewItem.propTypes = {
-  name: propTypes.string.isRequired,
+  name: propTypes.node.isRequired,
+};
+
+const SearchLocation: React.FC = () => {
+  const searchValue = useSelector((state: { region: { searchValue: string } }) => state.region.searchValue);
+  const dispatch = useDispatch();
+
+  const onChangeSearchValue = (e: { target: { value: string } }) => {
+    dispatch(setSearchValue(e.target.value));
+  };
+
+  return (
+    <div className="col-start-1 col-end-3 border-none bg-gray-200 bg-opacity-50 flex items-center mx-3 my-2">
+      <SearchIcon className="w-6 mx-3 my-2 inline-block text-gray-400" />
+      <input
+        className="h-6 bg-transparent text-xl outline-none text-gray-700 w-9/12"
+        type="text"
+        placeholder="Search"
+        onChange={onChangeSearchValue}
+        value={searchValue}
+      />
+      {searchValue ? (
+        <XIcon className="w-6 mx-3 my-2 inline-block text-gray-400" onClick={() => dispatch(setSearchValue(''))} />
+      ) : null}
+    </div>
+  );
 };
 
 export default ListInfoRegion;

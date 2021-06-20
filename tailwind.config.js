@@ -29,7 +29,6 @@ module.exports = {
       inset: ['active'],
       backgroundColor: ['active', 'focus'],
       height: ['last'],
-      textAlign: ['even'],
     },
   },
   plugins: [],

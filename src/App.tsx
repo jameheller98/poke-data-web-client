@@ -16,7 +16,7 @@ const App: React.FC = () => {
           </Route>
           <Route path="/version">
             <MainLayout>
-              <div>version</div>
+              <div>Version</div>
             </MainLayout>
           </Route>
           <Route path="/about-us">
