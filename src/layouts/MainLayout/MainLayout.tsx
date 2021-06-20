@@ -14,25 +14,47 @@ type MainLayoutProps = {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const headerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [collapsedSider, setCollapsedSider] = useState<boolean>(true);
   const [activeBackToHead, setActiveBackToHead] = useState<boolean>(false);
+  const [activeForwardToFooter, setActiveForwardToFooter] = useState<boolean>(false);
   const scrollToHead = () => {
     headerRef.current && headerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   };
-  const backToHead = () => {
-    const scrollHeightHeader = headerRef.current && headerRef.current.scrollHeight * 2;
 
-    if (scrollHeightHeader !== null && window.scrollY > scrollHeightHeader) {
+  const backToHead = () => {
+    const offsetHeightHeader = headerRef.current && headerRef.current?.offsetHeight;
+    const offsetHeightFooter = footerRef.current && footerRef.current?.offsetHeight;
+    if (offsetHeightHeader && offsetHeightFooter && window.scrollY > offsetHeightHeader * 2) {
       return setActiveBackToHead(true);
     }
     return setActiveBackToHead(false);
   };
+  const forwardToFooter = () => {
+    const offsetHeightHeader = headerRef.current && headerRef.current?.offsetHeight;
+    const offsetHeightContent = contentRef.current && contentRef.current?.offsetHeight;
+    const offsetHeightFooter = footerRef.current && footerRef.current?.offsetHeight;
+    if (
+      offsetHeightHeader &&
+      offsetHeightFooter &&
+      offsetHeightContent &&
+      window.scrollY + 80 > offsetHeightContent - 2 * offsetHeightHeader - 2 * offsetHeightFooter
+    ) {
+      return setActiveForwardToFooter(true);
+    }
+    return setActiveForwardToFooter(false);
+  };
+
   useEffect(() => {
     document.addEventListener('scroll', backToHead);
+    document.addEventListener('scroll', forwardToFooter);
     return () => {
       document.removeEventListener('scroll', backToHead);
+      document.removeEventListener('scroll', forwardToFooter);
     };
   }, []);
+
   return (
     <>
       <CollapseContext.Provider value={{ collapsedSider, setCollapsedSider }}>
@@ -42,14 +64,24 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <Sider>
           <Menu />
         </Sider>
-        <Content>{children}</Content>
-        {activeBackToHead ? (
-          <ChevronUpIcon
-            className="h-12 w-12 fixed bottom-4 right-4 text-white text-opacity-60 bg-black bg-opacity-20 rounded-full shadow-btn"
-            onClick={scrollToHead}
-          />
-        ) : null}
-        <Footer />
+        <div ref={contentRef}>
+          <Content>{children}</Content>
+          {activeBackToHead && !activeForwardToFooter ? (
+            <ChevronUpIcon
+              className={`h-12 w-12 fixed bottom-4 right-4 text-white text-opacity-60 bg-black bg-opacity-20 rounded-full shadow-btn`}
+              onClick={scrollToHead}
+            />
+          ) : null}
+          {activeForwardToFooter ? (
+            <ChevronUpIcon
+              className={`h-12 w-12 relative bottom-16 right-4 text-white text-opacity-60 bg-black bg-opacity-20 rounded-full shadow-btn float-right`}
+              onClick={scrollToHead}
+            />
+          ) : null}
+        </div>
+        <div ref={footerRef}>
+          <Footer />
+        </div>
       </CollapseContext.Provider>
     </>
   );
