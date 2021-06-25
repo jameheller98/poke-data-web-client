@@ -4,7 +4,7 @@ const Footer: React.FC = () => (
   <>
     <div className="cointainer mt-3 mx-5 mb-6 text-gray-700">
       <div className="py-3">
-        <a href="https://www.facebook.com/OuHoangTuan">
+        <a href="https://www.facebook.com/OuHoangTuan" aria-label="Facebook" target="_blank" rel="noreferrer">
           <svg
             className="inline-block mr-2 rounded-lg shadow-btn"
             viewBox="0 0 512 512"
@@ -21,7 +21,7 @@ const Footer: React.FC = () => (
             />
           </svg>
         </a>
-        <a href="https://www.instagram.com/ou.hoang_tuan/">
+        <a href="https://www.instagram.com/ou.hoang_tuan/" aria-label="Instagram" target="_blank" rel="noreferrer">
           <svg
             className="inline-block mr-2 rounded-lg shadow-btn"
             enableBackground="new 0 0 24 24"
@@ -53,7 +53,7 @@ const Footer: React.FC = () => (
             />
           </svg>
         </a>
-        <a href="mailto:nhoktuan1135789@gmail.com">
+        <a href="mailto:nhoktuan1135789@gmail.com" aria-label="Gmail" target="_blank" rel="noreferrer">
           <svg
             className="inline-block rounded-lg"
             width="40"
@@ -238,7 +238,7 @@ const Footer: React.FC = () => (
         </a>{' '}
         from{' '}
         <a className="text-blue-700" href="https://www.flaticon.com/" title="Flaticon">
-          www.flaticon.com
+          flaticon
         </a>
       </div>
       <small className="text-base">

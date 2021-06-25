@@ -14,7 +14,7 @@ const ListInfoRegion: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error = useSelector((state: { region: { error: any } }) => state.region.error);
   const idRegion = useSelector((state: { region: { data: { id: number } } }) => state.region.data.id);
-  const imageData = useSelector((state: { region: { imageData: [] } }) => state.region.imageData);
+  const imageData = useSelector((state: { region: { imageData: Record<string, ''>[] } }) => state.region.imageData);
   const dataInfoRegion = useSelector(selectDataRegion);
   const searchValue = useSelector((state: { region: { searchValue: string } }) => state.region.searchValue);
   const dispatch = useDispatch();
@@ -68,44 +68,42 @@ const ListInfoRegion: React.FC = () => {
 
   return (
     <>
-      <div>
-        <div className="block px-6 pt-3">
-          <ReplyIcon className="w-10 text-gray-500" onClick={() => history.goBack()} />
-        </div>
-        <div className="block p-3">
-          <img className="rounded-lg shadow-btn" src={imageData[idRegion - 1]} />
-          <div className="pt-2">
-            <div className="text-3xl text-black capitalize font-bold pt-1">
-              {dataInfoRegion.name && dataInfoRegion.name}
-            </div>
-            <div className="text-2xl text-gray-800 capitalize">
-              {dataInfoRegion.main_generation?.name
-                .split('-')
-                .map((item: string, index: number) => (index === 0 ? item : item.toUpperCase()))
-                .join('-')}
-            </div>
-            <div className={`grid ${version.length === pokedex.length ? 'grid-cols-2' : 'grid-cols-1'} gap-3 pt-1`}>
-              <TableView
-                data={version}
-                title="Version"
-                colorTitle="bg-indigo-100 text-indigo-900"
-                gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
-              />
-              <TableView
-                data={pokedex}
-                title="Pokedex"
-                colorTitle="bg-yellow-100 text-yellow-900"
-                gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
-              />
-            </div>
-            <div className="block pt-3">
-              <TableView
-                data={location}
-                title="Location"
-                colorTitle="bg-green-100 text-green-900"
-                gridCols="grid-cols-2"
-              />
-            </div>
+      <div className="px-6 pt-3">
+        <ReplyIcon className="w-10 text-gray-500" onClick={() => history.goBack()} />
+      </div>
+      <div className="p-3">
+        <img className="rounded-lg shadow-btn" src={imageData[idRegion - 1]?.large} width="600px" height="424px" />
+        <div className="pt-2">
+          <div className="text-3xl text-black capitalize font-bold pt-1">
+            {dataInfoRegion.name && dataInfoRegion.name}
+          </div>
+          <div className="text-2xl text-gray-800 capitalize">
+            {dataInfoRegion.main_generation?.name
+              .split('-')
+              .map((item: string, index: number) => (index === 0 ? item : item.toUpperCase()))
+              .join('-')}
+          </div>
+          <div className={`grid ${version.length === pokedex.length ? 'grid-cols-2' : 'grid-cols-1'} gap-3 pt-1`}>
+            <TableView
+              data={pokedex}
+              title="Pokedex"
+              colorTitle="bg-yellow-100 text-yellow-900"
+              gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
+            />
+            <TableView
+              data={version}
+              title="Version"
+              colorTitle="bg-indigo-100 text-indigo-900"
+              gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
+            />
+          </div>
+          <div className="block pt-3">
+            <TableView
+              data={location}
+              title="Location"
+              colorTitle="bg-green-100 text-green-900"
+              gridCols="grid-cols-2"
+            />
           </div>
         </div>
       </div>

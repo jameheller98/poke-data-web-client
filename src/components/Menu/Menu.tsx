@@ -82,8 +82,6 @@ const SubMenu: React.FC = () => {
 
   useEffect(() => {
     setActiveSubMenu(false);
-
-    // document.getElementById('menu')?.querySelector('.active') ? null : addActiveSpan();
   }, [collapsedSider]);
 
   useEffect(() => {
@@ -91,9 +89,7 @@ const SubMenu: React.FC = () => {
 
     for (let i = 0; i < activeItem.length; i++) {
       if (activeItem[i].children[0]?.classList.contains('active')) return addActiveSpan();
-
-      if (!activeItem[activeItem.length - 1].children[0]?.classList.contains('active'))
-        return document.getElementsByClassName('active__span')[0]?.remove();
+      document.getElementsByClassName('active__span')[0]?.remove();
     }
   }, [activeSubMenu]);
 
@@ -139,8 +135,8 @@ const SubMenu: React.FC = () => {
           </Item>
         </div>
         <div className="col-sub-menu">
-          <Item to="/version" activeSubMenu={true}>
-            <span className="sub-menu__text">Version</span>
+          <Item to="/pokedex" activeSubMenu={true}>
+            <span className="sub-menu__text">Pokedex</span>
           </Item>
         </div>
       </div>

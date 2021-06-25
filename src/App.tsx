@@ -14,9 +14,9 @@ const App: React.FC = () => {
               <Home />
             </MainLayout>
           </Route>
-          <Route path="/version">
+          <Route path="/pokedex">
             <MainLayout>
-              <div>Version</div>
+              <div>Pokedex</div>
             </MainLayout>
           </Route>
           <Route path="/about-us">

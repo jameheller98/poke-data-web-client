@@ -61,7 +61,7 @@ type TRegionItem = {
 const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
   const activeItem = useSelector((state: { region: { activeItem: boolean } }) => state.region.activeItem);
   const currentItem = useSelector((state: { region: { currentItem: number } }) => state.region.currentItem);
-  const imageData = useSelector((state: { region: { imageData: [] } }) => state.region.imageData);
+  const imageData = useSelector((state: { region: { imageData: Record<string, ''>[] } }) => state.region.imageData);
   const dispatch = useDispatch();
 
   const onActiveItem = (e: React.MouseEvent, index: number, mapCount: { [key: number]: string[] }) => {
@@ -73,10 +73,11 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
       }
 
       dispatch(toggleActiveItem(true));
+      e.currentTarget.getElementsByTagName('img')[0].src = imageData[index]?.large;
       e.currentTarget.classList.add(...mapCount[index]);
       return e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
     }
-
+    e.currentTarget.getElementsByTagName('img')[0].src = imageData[index]?.small;
     dispatch(toggleActiveItem(false));
     return e.currentTarget.classList.remove(...mapCount[index]);
   };
@@ -94,22 +95,28 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
             activeItem && currentItem === index ? 'text-left' : ''
           }`}
         >
-          <img src={imageData[index]} className="rounded-lg shadow-btn" />
+          <img
+            src={imageData[index]?.small}
+            className="rounded-lg shadow-btn"
+            width="600px"
+            height="424px"
+            alt={name}
+          />
           <span
             className={`${
               activeItem && currentItem === index ? 'text-3xl opacity-90' : 'text-2xl opacity-80'
             } font-semibold tracking-wide text-gray-800 transition-all inline-block pt-1 underline float-left`}
           >
-            <Link to={`region/${name}`} className="capitalize">
+            <Link to={`region/${name}`} rel="preconnect" className="capitalize">
               {name}
             </Link>
           </span>{' '}
           <p
             className={`${
               activeItem && currentItem === index
-                ? 'text-xl pt-3 text-opacity-70 '
-                : 'text-lg truncate pt-2 text-opacity-40 '
-            }text-gray-800`}
+                ? 'text-xl pt-3 text-opacity-80 '
+                : 'text-lg truncate pt-2 text-opacity-90 '
+            }text-gray-700`}
           >
             &nbsp;- {dataRegionDescription[name]}
           </p>

@@ -58,13 +58,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <>
       <CollapseContext.Provider value={{ collapsedSider, setCollapsedSider }}>
-        <div ref={headerRef}>
+        <header ref={headerRef}>
           <Header />
-        </div>
-        <Sider>
-          <Menu />
-        </Sider>
-        <div ref={contentRef}>
+        </header>
+        <aside>
+          <Sider>
+            <Menu />
+          </Sider>
+        </aside>
+        <main ref={contentRef}>
           <Content>{children}</Content>
           {activeBackToHead && !activeForwardToFooter ? (
             <ChevronUpIcon
@@ -78,10 +80,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               onClick={scrollToHead}
             />
           ) : null}
-        </div>
-        <div ref={footerRef}>
+        </main>
+        <footer ref={footerRef}>
           <Footer />
-        </div>
+        </footer>
       </CollapseContext.Provider>
     </>
   );

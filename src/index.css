@@ -2,67 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-Light.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-Light.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-Regular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 400;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-Italic.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 600;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-SemiBold.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 600;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-SemiBoldItalic.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-Bold.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 700;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-BoldItalic.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 800;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-ExtraBold.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 800;
-  src: local('Open Sans'), url('./assets/fonts/OpenSans-ExtraBoldItalic.ttf') format('truetype');
-}
-
 body {
   margin: 0;
   font-family: 'Open Sans', sans-serif;

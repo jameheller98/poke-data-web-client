@@ -1,4 +1,4 @@
-import { ReactComponent as Logo } from '../../assets/images/pokeball.svg';
+import { ReactComponent as Logo } from '../../pokeball.svg';
 
 const Brand: React.FC = () => (
   <>
