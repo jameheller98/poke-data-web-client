@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-import { fetchDetailRegions, selectDataRegion, setSearchValue } from './RegionSlice';
+import { useParams, Link } from 'react-router-dom';
+import { fetchDetailRegions, selectDataLocationRegion, selectDataRegion, setSearchValue } from './RegionSlice';
 import Error from '../Error';
-import { ReplyIcon, SearchIcon, XIcon } from '@heroicons/react/solid';
+import { ReplyIcon } from '@heroicons/react/solid';
 import propTypes from 'prop-types';
 import React from 'react';
+import SearchInput from '../../components/SearchInput/SearchInput';
 
 const ListInfoRegion: React.FC = () => {
-  const history = useHistory();
+  // const history = useHistory();
   const { name }: { name: string } = useParams();
   const loading = useSelector((state: { region: { loading: boolean } }) => state.region.loading);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +17,7 @@ const ListInfoRegion: React.FC = () => {
   const idRegion = useSelector((state: { region: { data: { id: number } } }) => state.region.data.id);
   const imageData = useSelector((state: { region: { imageData: Record<string, ''>[] } }) => state.region.imageData);
   const dataInfoRegion = useSelector(selectDataRegion);
-  const searchValue = useSelector((state: { region: { searchValue: string } }) => state.region.searchValue);
+  const dataLocationRegion = useSelector(selectDataLocationRegion);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,30 +54,34 @@ const ListInfoRegion: React.FC = () => {
       <ListViewItem key={index} name={item.name} />
     )) || [];
 
-  const location = searchValue
-    ? dataInfoRegion.locations
-        ?.filter((item: { name: string }) => item.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
-        .map((item: { name: string }, index: number) => <ListViewItem key={index} name={item.name} />) || []
-    : dataInfoRegion.locations?.map((item: { name: string }, index: number) => (
-        <ListViewItem key={index} name={item.name} />
-      )) || [];
+  const location =
+    dataLocationRegion?.map((item: { name: string }, index: number) => <ListViewItem key={index} name={item.name} />) ||
+    [];
 
   const pokedex =
     dataInfoRegion.pokedexes?.map((item: { name: string }, index: number) => (
-      <ListViewItem key={index} name={item.name} />
+      <Link to={`/pokedex/${item.name}`} key={index}>
+        <ListViewItem key={index} name={item.name} />
+      </Link>
     )) || [];
 
   return (
     <>
       <div className="px-6 pt-3">
-        <ReplyIcon className="w-10 text-gray-500" onClick={() => history.goBack()} />
+        <Link to="/region" aria-label="BackRegion">
+          <ReplyIcon className="inline-block w-10 text-gray-500" />
+        </Link>
       </div>
       <div className="p-3">
-        <img className="rounded-lg shadow-btn" src={imageData[idRegion - 1]?.large} width="600px" height="424px" />
+        <img
+          className="rounded-lg shadow-btn"
+          src={imageData[idRegion - 1]?.large}
+          width="600px"
+          height="424px"
+          alt={dataInfoRegion.name}
+        />
         <div className="pt-2">
-          <div className="text-3xl text-black capitalize font-bold pt-1">
-            {dataInfoRegion.name && dataInfoRegion.name}
-          </div>
+          <div className="text-3xl text-black capitalize font-bold pt-1">{dataInfoRegion.name}</div>
           <div className="text-2xl text-gray-800 capitalize">
             {dataInfoRegion.main_generation?.name
               .split('-')
@@ -150,7 +155,6 @@ TableView.propTypes = {
 const ListViewItem: React.FC<{ name: React.ReactNode }> = ({ name }) => {
   return (
     <span className={`text-gray-600 capitalize flex items-center pl-3`}>
-      {/* <ChevronRightIcon className="w-4 inline-block text-gray-600 mr-1" /> */}
       <span className="inline-block">{name}</span>
     </span>
   );
@@ -168,20 +172,16 @@ const SearchLocation: React.FC = () => {
     dispatch(setSearchValue(e.target.value));
   };
 
+  const clearSearchValue = () => {
+    dispatch(setSearchValue(''));
+  };
+
   return (
-    <div className="col-start-1 col-end-3 border-none bg-gray-200 bg-opacity-50 flex items-center mx-3 my-2">
-      <SearchIcon className="w-6 mx-3 my-2 inline-block text-gray-400" />
-      <input
-        className="h-6 bg-transparent text-xl outline-none text-gray-700 w-9/12"
-        type="text"
-        placeholder="Search"
-        onChange={onChangeSearchValue}
-        value={searchValue}
-      />
-      {searchValue ? (
-        <XIcon className="w-6 mx-3 my-2 inline-block text-gray-400" onClick={() => dispatch(setSearchValue(''))} />
-      ) : null}
-    </div>
+    <SearchInput
+      searchValue={searchValue}
+      onChangeSearchValue={onChangeSearchValue}
+      clearSearchValue={clearSearchValue}
+    />
   );
 };
 

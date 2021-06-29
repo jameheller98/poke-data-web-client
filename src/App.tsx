@@ -3,6 +3,7 @@ import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import './App.css';
 import RouterRegion from './pages/Region/RouterRegion';
+import RouterPokedex from './pages/Pokedex/RouterPokedex';
 
 const App: React.FC = () => {
   return (
@@ -12,11 +13,6 @@ const App: React.FC = () => {
           <Route exact path="/">
             <MainLayout>
               <Home />
-            </MainLayout>
-          </Route>
-          <Route path="/pokedex">
-            <MainLayout>
-              <div>Pokedex</div>
             </MainLayout>
           </Route>
           <Route path="/about-us">
@@ -30,6 +26,7 @@ const App: React.FC = () => {
             </MainLayout>
           </Route>
         </Switch>
+        <RouterPokedex />
         <RouterRegion />
       </Router>
     </>

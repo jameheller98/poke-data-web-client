@@ -70,13 +70,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <Content>{children}</Content>
           {activeBackToHead && !activeForwardToFooter ? (
             <ChevronUpIcon
-              className={`h-12 w-12 fixed bottom-4 right-4 text-white text-opacity-60 bg-black bg-opacity-20 rounded-full shadow-btn`}
+              className={`h-12 w-12 fixed bottom-4 right-4 text-white text-opacity-60 bg-black bg-opacity-20 rounded-full`}
               onClick={scrollToHead}
             />
           ) : null}
-          {activeForwardToFooter ? (
+          {activeForwardToFooter && contentRef.current && contentRef.current.offsetHeight > 400 ? (
             <ChevronUpIcon
-              className={`h-12 w-12 relative bottom-16 right-4 text-white text-opacity-60 bg-black bg-opacity-20 rounded-full shadow-btn float-right`}
+              className={`h-12 w-12 relative bottom-16 right-4 text-white text-opacity-60 bg-black bg-opacity-20 rounded-full float-right`}
               onClick={scrollToHead}
             />
           ) : null}

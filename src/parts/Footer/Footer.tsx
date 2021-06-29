@@ -6,7 +6,7 @@ const Footer: React.FC = () => (
       <div className="py-3">
         <a href="https://www.facebook.com/OuHoangTuan" aria-label="Facebook" target="_blank" rel="noreferrer">
           <svg
-            className="inline-block mr-2 rounded-lg shadow-btn"
+            className="inline-block mr-2 rounded-lg"
             viewBox="0 0 512 512"
             width="40"
             xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@ const Footer: React.FC = () => (
         </a>
         <a href="https://www.instagram.com/ou.hoang_tuan/" aria-label="Instagram" target="_blank" rel="noreferrer">
           <svg
-            className="inline-block mr-2 rounded-lg shadow-btn"
+            className="inline-block mr-2 rounded-lg"
             enableBackground="new 0 0 24 24"
             viewBox="0 0 24 24"
             width="40"

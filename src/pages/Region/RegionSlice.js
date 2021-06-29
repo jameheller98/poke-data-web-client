@@ -91,3 +91,15 @@ export function selectStateRegion(state) {
 export function selectDataRegion(state) {
   return state.region.data;
 }
+
+export function selectDataLocationRegion({
+  region: {
+    data: { locations },
+    searchValue,
+  },
+}) {
+  if (searchValue) {
+    return locations.filter((item) => item.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()));
+  }
+  return locations;
+}

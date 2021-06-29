@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchRegion, selectDataRegion, toggleActiveItem, setCurrentItem } from './RegionSlice';
 import Error from '../Error';
 import data from './dataRegionDescription.json';
+import { DocumentTextIcon } from '@heroicons/react/solid';
 
 const dataRegionDescription: { [key: string]: string } = data;
 
@@ -23,6 +24,8 @@ const ListRegion: React.FC = () => {
   useEffect(() => {
     dispatch(toggleActiveItem(false));
     dispatch(fetchRegion);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    document.querySelectorAll('link[rel=preload]').forEach((e: { parentNode: any }) => e.parentNode.removeChild(e));
   }, []);
 
   if (loading) {
@@ -48,6 +51,14 @@ const ListRegion: React.FC = () => {
 
   return (
     <>
+      <h1 className="font-medium text-5xl text-gray-800 tracking-wider text-center py-5 font-serif">Regions</h1>
+      <p className="bg-gray-50 text-gray-800 text-opacity-80 text-xl m-3 p-3 overflow-auto h-52 mb-10 shadow-inner rounded-lg">
+        <DocumentTextIcon className="inline-block h-10 float-left mt-2 mr-2" />
+        Regions are areas in the Pokémon universe that are smaller parts of a nation. Each region has their own Pokémon
+        Professor, who provides a unique set of Starter Pokémon for young Trainers. Each region also has a unique set of
+        eight Gym Leaders, along with the regional Elite Four and Pokémon Champions. In some cases, regions can share
+        Elite Four divisions, such as Johto and Kanto.
+      </p>
       <div className="grid grid-cols-2 gap-4 p-3">{allCard}</div>
     </>
   );
@@ -64,19 +75,33 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
   const imageData = useSelector((state: { region: { imageData: Record<string, ''>[] } }) => state.region.imageData);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const $link = document.createElement('link');
+    $link.rel = 'preload';
+    $link.href = imageData[index]?.large;
+    $link.as = 'image';
+    document.head.appendChild($link);
+  }, []);
+
   const onActiveItem = (e: React.MouseEvent, index: number, mapCount: { [key: number]: string[] }) => {
+    const tagLink = e.target as HTMLElement;
+    if (tagLink.tagName === 'A') {
+      return;
+    }
     dispatch(setCurrentItem(index));
 
     if (!activeItem || currentItem !== index) {
       if (currentItem !== index) {
+        e.currentTarget.getElementsByTagName('img')[0].src = imageData[index]?.small;
         document.getElementsByClassName(mapCount[currentItem][0])[0]?.classList.remove(...mapCount[currentItem]);
       }
 
-      dispatch(toggleActiveItem(true));
       e.currentTarget.getElementsByTagName('img')[0].src = imageData[index]?.large;
+      dispatch(toggleActiveItem(true));
       e.currentTarget.classList.add(...mapCount[index]);
       return e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
     }
+
     e.currentTarget.getElementsByTagName('img')[0].src = imageData[index]?.small;
     dispatch(toggleActiveItem(false));
     return e.currentTarget.classList.remove(...mapCount[index]);
@@ -95,13 +120,16 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
             activeItem && currentItem === index ? 'text-left' : ''
           }`}
         >
-          <img
-            src={imageData[index]?.small}
-            className="rounded-lg shadow-btn"
-            width="600px"
-            height="424px"
-            alt={name}
-          />
+          <picture>
+            <source media="(min-width: 768px)" srcSet={imageData[index]?.large} />
+            <img
+              src={imageData[index]?.small}
+              className="rounded-lg shadow-btn"
+              width="600px"
+              height="424px"
+              alt={name}
+            />
+          </picture>
           <span
             className={`${
               activeItem && currentItem === index ? 'text-3xl opacity-90' : 'text-2xl opacity-80'
