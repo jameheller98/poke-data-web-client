@@ -25,7 +25,7 @@ const Menu: React.FC = () => {
     <>
       <MenuContext.Provider value={direction}>
         <nav className="font-mono text-right relative">
-          <div className="menu__title">MENU</div>
+          <h1 className="menu__title">MENU</h1>
           <ul className="inline-block" id="menu">
             <li
               className={direction === Direction.Horizontal ? 'float-left' : 'block'}

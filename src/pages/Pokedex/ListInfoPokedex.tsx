@@ -2,7 +2,13 @@ import ImageLazy from '../../imageLazy.svg';
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { fetchDetailsPokedex, fetchPokemonsPokedex, searchPokemon, selectDataPokedex } from './PokedexSlice';
+import {
+  fetchDetailsPokedex,
+  fetchPokemonsPokedex,
+  searchPokemon,
+  selectDataPokedex,
+  setNextOffset,
+} from './PokedexSlice';
 import useInfiniteScroll from '../../customHooks/useInfiniteScroll';
 import useLazyLoading from '../../customHooks/useLazyLoading';
 import { ReplyIcon } from '@heroicons/react/solid';
@@ -35,7 +41,7 @@ const ListInfoPokedex: React.FC = () => {
     }
   }, [currentOffset]);
 
-  useInfiniteScroll(bottomBoundaryRef, dispatch);
+  useInfiniteScroll(bottomBoundaryRef, dispatch, setNextOffset);
   useLazyLoading('.card-img-top', detailPokemons);
 
   const listCardPokemon = detailPokemons?.map(
@@ -60,7 +66,7 @@ const ListInfoPokedex: React.FC = () => {
       index: number,
     ) => {
       return (
-        <div key={index} className="bg-gray-50 rounded-xl">
+        <figure key={index} className="bg-gray-50 rounded-xl">
           <img
             className="card-img-top m-auto"
             data-src={genVII ? genVII : front_default}
@@ -69,8 +75,8 @@ const ListInfoPokedex: React.FC = () => {
             width="128"
             height="128"
           />
-          <div className="text-2xl tracking-wide text-center text-gray-700 mb-3 capitalize">{name}</div>
-        </div>
+          <figcaption className="text-2xl tracking-wide text-center text-gray-700 mb-3 capitalize">{name}</figcaption>
+        </figure>
       );
     },
   );
@@ -87,12 +93,10 @@ const ListInfoPokedex: React.FC = () => {
       </h1>
       <SearchInput
         searchValue={inputText}
-        onChangeSearchValue={(e) => {
-          setInputText(e.target.value);
-        }}
+        onChangeSearchValue={(e) => setInputText(e.target.value)}
         clearSearchValue={() => setInputText('')}
       />
-      <div className="grid grid-cols-2 gap-4 px-3 pt-3">{listCardPokemon}</div>
+      <section className="grid grid-cols-2 gap-4 px-3 pt-3">{listCardPokemon}</section>
       {loading && (
         <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-36 w-36 m-auto mt-3"></div>
       )}

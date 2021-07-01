@@ -1,0 +1,27 @@
+{
+  "short_name": "PKM Dex",
+  "name": "Pokemon Dex",
+  "description": "Web site use find database of Pokemon, Pokedex, Region, ... in Pokémon",
+  "icons": [
+    {
+      "src": "pokeball.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "pokeball.png",
+      "type": "image/png",
+      "sizes": "191x81"
+    },
+    {
+      "src": "pokeball_512.png",
+      "type": "image/png",
+      "sizes": "512x217",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

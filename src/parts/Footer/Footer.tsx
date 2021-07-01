@@ -219,19 +219,21 @@ const Footer: React.FC = () => (
           </svg>
         </a>
       </div>
-      <div className="mb-4 text-lg">
-        <span className="mr-1">
-          <UserIcon className="w-5 inline-block" />{' '}
-        </span>{' '}
-        Hoang Tuan
-        <br />
-        <span className="mr-1">
-          <PhoneIcon className="w-5 inline-block" />{' '}
-        </span>{' '}
-        0938******
-        <br />
-      </div>
-      <div className="my-3 text-xs">
+      <address className="mb-4 text-lg">
+        <div className="mt-2">
+          <span className="mr-2 text-gray-500 text-opacity-80">
+            <UserIcon className="w-6 inline-block" />{' '}
+          </span>{' '}
+          <strong>Hoang Tuan</strong>
+        </div>
+        <div className="my-2">
+          <span className="mr-2 text-gray-500 text-opacity-80">
+            <PhoneIcon className="w-6 inline-block" />{' '}
+          </span>{' '}
+          <b>0938******</b>
+        </div>
+      </address>
+      <address className="my-3 text-xs">
         Icons made by{' '}
         <a className="text-blue-700" href="https://www.freepik.com" title="Freepik">
           Freepik
@@ -240,9 +242,9 @@ const Footer: React.FC = () => (
         <a className="text-blue-700" href="https://www.flaticon.com/" title="Flaticon">
           flaticon
         </a>
-      </div>
+      </address>
       <small className="text-base">
-        Copyright &copy; {new Date().getFullYear()} <span>PKMDex</span>. All Rights Reserved
+        Copyright &copy; {new Date().getFullYear()} <abbr title="Pokémon Dex">PKMDex</abbr>. All Rights Reserved
       </small>
     </div>
   </>

@@ -72,46 +72,43 @@ const ListInfoRegion: React.FC = () => {
           <ReplyIcon className="inline-block w-10 text-gray-500" />
         </Link>
       </div>
-      <div className="p-3">
-        <img
-          className="rounded-lg shadow-btn"
-          src={imageData[idRegion - 1]?.large}
-          width="600px"
-          height="424px"
-          alt={dataInfoRegion.name}
-        />
-        <div className="pt-2">
-          <div className="text-3xl text-black capitalize font-bold pt-1">{dataInfoRegion.name}</div>
-          <div className="text-2xl text-gray-800 capitalize">
+      <section className="p-3">
+        <figure>
+          <img
+            className="rounded-lg shadow-btn"
+            src={imageData[idRegion - 1]?.large}
+            width="600px"
+            height="424px"
+            alt={dataInfoRegion.name}
+          />
+          <figcaption className="text-3xl text-black capitalize font-bold pt-1">{dataInfoRegion.name}</figcaption>
+        </figure>
+        <cite className="text-2xl text-gray-800 capitalize">
+          <h1>
             {dataInfoRegion.main_generation?.name
               .split('-')
               .map((item: string, index: number) => (index === 0 ? item : item.toUpperCase()))
               .join('-')}
-          </div>
-          <div className={`grid ${version.length === pokedex.length ? 'grid-cols-2' : 'grid-cols-1'} gap-3 pt-1`}>
-            <TableView
-              data={pokedex}
-              title="Pokedex"
-              colorTitle="bg-yellow-100 text-yellow-900"
-              gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
-            />
-            <TableView
-              data={version}
-              title="Version"
-              colorTitle="bg-indigo-100 text-indigo-900"
-              gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
-            />
-          </div>
-          <div className="block pt-3">
-            <TableView
-              data={location}
-              title="Location"
-              colorTitle="bg-green-100 text-green-900"
-              gridCols="grid-cols-2"
-            />
-          </div>
+          </h1>
+        </cite>
+        <div className={`grid ${version.length === pokedex.length ? 'grid-cols-2' : 'grid-cols-1'} gap-3 pt-1`}>
+          <TableView
+            data={pokedex}
+            title="Pokedex"
+            colorTitle="bg-yellow-100 text-yellow-900"
+            gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
+          />
+          <TableView
+            data={version}
+            title="Version"
+            colorTitle="bg-indigo-100 text-indigo-900"
+            gridCols={`${version.length === pokedex.length ? 'grid-cols-1' : 'grid-cols-2'}`}
+          />
         </div>
-      </div>
+        <div className="block pt-3">
+          <TableView data={location} title="Location" colorTitle="bg-green-100 text-green-900" gridCols="grid-cols-2" />
+        </div>
+      </section>
     </>
   );
 };
@@ -124,23 +121,23 @@ const TableView: React.FC<{
   height?: string;
 }> = ({ data, title, colorTitle, gridCols, height = 'h-fit-content' }) => {
   return (
-    <div
+    <article
       className={`grid ${gridCols} gap-y-5 mt-5 text-lg bg-gray-50 bg-opacity-90 pb-5 ${height} shadow-md rounded-t-lg`}
     >
-      <div
+      <h2
         className={`${
           gridCols === 'grid-cols-1' ? '' : 'col-start-1 col-end-3 '
         }text-center font-semibold rounded-t-lg py-1 tracking-wide ${colorTitle}`}
       >
         {title}
-      </div>
+      </h2>
       {title === 'Location' ? <SearchLocation /> : null}
       {data.length ? (
         data
       ) : (
         <span className="col-start-1 col-end-3 text-gray-600 capitalize text-center">Not available!</span>
       )}
-    </div>
+    </article>
   );
 };
 

@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect } from 'react';
-import { setNextOffset } from '../pages/Pokedex/PokedexSlice';
 
-const useInfiniteScroll = (scrollRef: any, dispatch: any): void => {
+const useInfiniteScroll = (scrollRef: any, dispatch: any, fnSetNextOffset: () => void): void => {
   const scrollObserver = useCallback(
     (node) => {
       new IntersectionObserver((entries) => {
         entries.forEach((en) => {
           if (en.intersectionRatio > 0) {
-            dispatch(setNextOffset());
+            dispatch(fnSetNextOffset());
           }
         });
       }).observe(node);

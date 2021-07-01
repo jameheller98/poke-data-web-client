@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-const useLazyLoading = (imgSelector: string, items: []): void => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const useLazyLoading = (imgSelector: string, items: any[]): void => {
   const imgObserver = useCallback((node) => {
     const intObs = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
