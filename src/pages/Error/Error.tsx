@@ -5,7 +5,6 @@ type TError = {
   error: any;
 };
 const Error: React.FC<TError> = ({ error }) => {
-  console.log(error.response);
   return (
     <div className="h-96 text-gray-700 flex items-center justify-center">
       <div className="text-4xl">

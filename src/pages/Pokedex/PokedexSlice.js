@@ -7,17 +7,17 @@ export async function fetchPokedex(dispatch) {
     const response = await axios.get('https://pokeapi.co/api/v2/pokedex?offset=0&limit=28');
     dispatch({ type: 'pokedex/pokedexLoaded', payload: response.data });
   } catch (err) {
-    dispatch({ type: 'pokedex/pokedex', payload: err });
+    dispatch({ type: 'pokedex/pokedexError', payload: err });
   }
 }
 
 export function fetchDetailsPokedex(name) {
   return async function fetchDetailsPokedexThunk(dispatch, getState) {
-    dispatch({ type: 'pokedex/pokemonReset' });
     dispatch({ type: 'pokedex/pokedexLoading' });
     try {
       const response = await axios.get('https://pokeapi.co/api/v2/pokedex/' + name);
       const arrPokemon = response.data.pokemon_entries.slice(0, getState().pokedex.limit);
+      dispatch({ type: 'pokedex/pokemonResetCurrent' });
       dispatch(fetchPokemonsPokedex(arrPokemon));
       dispatch({ type: 'pokedex/pokedexLoaded', payload: response.data });
     } catch (err) {
@@ -35,6 +35,7 @@ export function fetchPokemonsPokedex(arrPokemon) {
           axios.get('https://pokeapi.co/api/v2/pokemon/' + url.match(/(\d+)(?!.*\d)/)[0]).then((res) => res.data),
         ),
       );
+
       dispatch({ type: 'pokedex/pokemonLoaded', payload: arrDetailsPokemon });
     } catch (err) {
       dispatch({ type: 'pokedex/pokedexError', payload: err });
@@ -44,7 +45,6 @@ export function fetchPokemonsPokedex(arrPokemon) {
 
 export function searchPokemon(searchValue) {
   return async function searchPokemonThunk(dispatch, getState) {
-    dispatch({ type: 'pokedex/pokedexLoading' });
     if (searchValue)
       try {
         const searchArrPokemon = await Promise.all(
@@ -61,9 +61,6 @@ export function searchPokemon(searchValue) {
       } catch (err) {
         dispatch({ type: 'pokedex/pokedexError', payload: err });
       }
-    else {
-      dispatch({ type: 'pokedex/pokemonResetSearch' });
-    }
   };
 }
 
@@ -99,11 +96,15 @@ export default function pokedexReducer(
     case 'pokedex/pokemonSearch':
       return { ...state, loading: false, details_pokemon_search: action.payload };
     case 'pokedex/pokemonReset':
-      return { ...state, details_pokemon: [], details_pokemon_search: [], currentOffset: 0 };
+      return { ...state, details_pokemon: [], details_pokemon_search: [] };
+    case 'pokedex/pokemonResetCurrent':
+      return { ...state, currentOffset: 0 };
     case 'pokedex/pokemonResetSearch':
       return { ...state, details_pokemon_search: [] };
     case 'pokedex/setNextOffset':
       return { ...state, currentOffset: state.currentOffset + state.limit };
+    case 'pokedex/setLimit':
+      return { ...state, limit: action.payload };
     default:
       return state;
   }

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios from 'axios';
+import { createSelector } from 'reselect';
 
 export async function fetchRegion(dispatch) {
   dispatch({ type: 'region/regionLoading' });
@@ -88,9 +89,10 @@ export function selectStateRegion(state) {
   return state.region;
 }
 
-export function selectDataRegion(state) {
-  return state.region.data;
-}
+export const selectDataRegion = createSelector(
+  (state) => state.region,
+  (region) => region.data,
+);
 
 export function selectDataLocationRegion({
   region: {

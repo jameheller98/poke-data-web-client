@@ -1,0 +1,27 @@
+{
+  "skill": ["HTML", "CSS", "JAVASCRIPT", "REACTJS", "NODEJS", "MONGODB", "JAVA", "MYSQL"],
+  "hobby": ["Travel", "Music", "Photographer", "Soccer"],
+  "project": [
+    {
+      "name": "Real Estate Web Application",
+      "description": "Building a website for users to buy and sell real estate.",
+      "language": "Javascript, Html, Css",
+      "database": "Mongodb",
+      "framework": "Ejs, Expressjs"
+    },
+    {
+      "name": "English Exam Review Web Application",
+      "description": "Build a website for users to test their English ability.",
+      "language": "Java",
+      "database": "Mysql",
+      "framework": "SpringMVC, Jsp"
+    },
+    {
+      "name": "Pokémon data Search Website",
+      "description": "Build a website for users to search for pokémon data.",
+      "language": "Javascript, Html, Css",
+      "database": "Mysql",
+      "framework": "Reactjs, Expressjs"
+    }
+  ]
+}

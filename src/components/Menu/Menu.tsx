@@ -1,9 +1,23 @@
 import PropTypes from 'prop-types';
-import { HomeIcon, LinkIcon, CubeIcon, ChevronLeftIcon, ChevronDownIcon } from '@heroicons/react/solid';
+import {
+  HomeIcon,
+  LinkIcon,
+  CubeIcon,
+  ChevronLeftIcon,
+  ChevronDownIcon,
+  InformationCircleIcon,
+  LoginIcon,
+  PlusIcon,
+  CollectionIcon,
+} from '@heroicons/react/solid';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useCollapseContext } from '../../contexts/MainLayoutContext';
 import './Menu.scss';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import useWindowSize from '../../customHooks/useWindowSize';
+import { auth } from '../../adapters/AuthAdapter';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../pages/Auth/AuthSlice';
 
 type TItem = {
   to: string;
@@ -11,64 +25,114 @@ type TItem = {
   activeSubMenu?: boolean;
 };
 
-enum Direction {
+export enum Direction {
   Horizontal = 'horizontal',
   Vertical = 'vertical',
 }
 
-const MenuContext = React.createContext(Direction.Vertical);
-
 const Menu: React.FC = () => {
-  const direction = useContext(MenuContext);
+  const { width } = useWindowSize();
+  const direction = width > 640 ? Direction.Horizontal : Direction.Vertical;
+  const currentUser = useSelector(selectCurrentUser);
 
   return (
     <>
-      <MenuContext.Provider value={direction}>
-        <nav className="font-mono text-right relative">
-          <h1 className="menu__title">MENU</h1>
-          <ul className="inline-block" id="menu">
+      <nav className="font-mono text-right relative sm:py-2 sm:pl-5">
+        {width > 640 ? null : <h1 className="menu__title">MENU</h1>}
+        <ul className="inline-block sm:flex sm:gap-2 sm:flex-wrap" id="menu">
+          <li
+            className={direction === Direction.Horizontal ? 'float-left' : 'block'}
+            onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
+          >
+            <Item to="/about-us">
+              <span className="menu__text sm:text-base">About</span>
+              <InformationCircleIcon className="active__icon menu__icon icon__private" />
+            </Item>
+          </li>
+          <li
+            className={direction === Direction.Horizontal ? 'float-left' : 'block'}
+            onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
+          >
+            <Item to="/">
+              <span className="menu__text">Home</span>
+              <HomeIcon className="active__icon menu__icon" />
+            </Item>
+          </li>
+          <li
+            className={direction === Direction.Horizontal ? 'float-left' : 'block'}
+            onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
+          >
+            <Item to="/builder">
+              <span className="menu__text">Builder</span>
+              <CollectionIcon className="active__icon menu__icon" />
+            </Item>
+          </li>
+          <li className={`${direction === Direction.Horizontal ? 'float-left' : 'block'} relative`}>
+            <SubMenu />
+          </li>
+          <li
+            className={direction === Direction.Horizontal ? 'float-left' : 'block'}
+            onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
+          >
+            <Item to="/contact">
+              <span className="menu__text">Contact</span>
+              <LinkIcon className="active__icon menu__icon" />
+            </Item>
+          </li>
+        </ul>
+      </nav>
+      {width > 640 ? null : <hr className="h-1 bg-gray-300 my-3" />}
+      <nav className="font-mono text-right sm:py-2 sm:pl-5 sm:m-auto sm:mr-0">
+        <ul className="inline-block sm:justify-end sm:flex sm:gap-2 sm:flex-wrap sm:content-end" id="menu">
+          {auth.isLoggedIn() ? (
             <li
               className={direction === Direction.Horizontal ? 'float-left' : 'block'}
               onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
             >
-              <Item to="/about-us">
-                <span className="menu__text">About us</span>
-                <LinkIcon className="active__icon menu__icon" />
+              <h2 className="w-11/12 text-xl text-center font-semibold text-gray-50 bg-gray-400 bg-opacity-80 p-2">
+                <NavLink to={`/user/${currentUser.username}`}>
+                  {currentUser.firstName + ' ' + currentUser.lastName}
+                </NavLink>
+              </h2>
+              <Item to="/auth/logout">
+                <span className="menu__text">Logout</span>
+                <LoginIcon className="active__icon menu__icon" />
               </Item>
             </li>
-            <li
-              className={direction === Direction.Horizontal ? 'float-left' : 'block'}
-              onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
-            >
-              <Item to="/">
-                <span className="menu__text">Home</span>
-                <HomeIcon className="active__icon menu__icon" />
-              </Item>
-            </li>
-
-            <li className={direction === Direction.Horizontal ? 'float-left' : 'block'}>
-              <SubMenu />
-            </li>
-            <li
-              className={direction === Direction.Horizontal ? 'float-left' : 'block'}
-              onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
-            >
-              <Item to="/contact">
-                <span className="menu__text">Contact</span>
-                <LinkIcon className="active__icon menu__icon" />
-              </Item>
-            </li>
-          </ul>
-        </nav>
-      </MenuContext.Provider>
+          ) : (
+            <>
+              <li
+                className={direction === Direction.Horizontal ? 'float-left' : 'block'}
+                onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
+              >
+                <Item to="/auth/login">
+                  <span className="menu__text">Login</span>
+                  <LoginIcon className="active__icon menu__icon" />
+                </Item>
+              </li>
+              <li
+                className={direction === Direction.Horizontal ? 'float-left' : 'block'}
+                onClick={() => document.getElementsByClassName('active__span')[0]?.remove()}
+              >
+                <Item to="/auth/register">
+                  <span className="menu__text">Register</span>
+                  <PlusIcon className="active__icon menu__icon" />
+                </Item>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
     </>
   );
 };
 
 const SubMenu: React.FC = () => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { width } = useWindowSize();
+  const direction = width > 640 ? Direction.Horizontal : Direction.Vertical;
   const { collapsedSider, setCollapsedSider } = useCollapseContext();
-  const direction = useContext(MenuContext);
   const [activeSubMenu, setActiveSubMenu] = useState(false);
 
   useEffect(() => {
@@ -93,6 +157,15 @@ const SubMenu: React.FC = () => {
     }
   }, [activeSubMenu]);
 
+  useEffect(() => {
+    document.addEventListener('click', onClickOutSide);
+    return () => document.removeEventListener('click', onClickOutSide);
+  });
+
+  const onClickOutSide = (e: MouseEvent) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setActiveSubMenu(false);
+  };
+
   const addActiveSpan = () => {
     const activeSubMenu = document.getElementsByClassName('active__sub')[0];
     const activeSpan = document.createElement('span');
@@ -107,46 +180,52 @@ const SubMenu: React.FC = () => {
   };
 
   return (
-    <>
+    <div ref={wrapperRef}>
       <span
         className={`menu__item menu__item--padding active__sub ${
           direction === Direction.Horizontal ? 'menu__item--horizontal' : 'menu__item--vertical'
         }`}
-        onClick={() => setActiveSubMenu(activeSubMenu ? false : true)}
+        onClick={() => setActiveSubMenu(!activeSubMenu)}
       >
-        <span className="menu__text">Pokemon data</span>
+        <span className="menu__text">Data</span>
         <CubeIcon className="active__icon menu__icon" />
         {activeSubMenu ? (
-          <ChevronDownIcon
-            className="inline-block ml-1.5 text-gray-400 text-opacity-95 pointer-events-none"
-            width="24"
-          />
+          <>
+            <ChevronDownIcon className="inline-block ml-1.5 text-gray-400 text-opacity-95 pointer-events-none h-6 sm:h-5 sm:ml-0" />
+          </>
         ) : (
-          <ChevronLeftIcon
-            className="inline-block ml-1.5 text-gray-400 text-opacity-95 pointer-events-none"
-            width="24"
-          />
+          <>
+            <ChevronLeftIcon className="inline-block ml-1.5 text-gray-400 text-opacity-95 pointer-events-none h-6 sm:h-5 sm:ml-0" />
+          </>
         )}
       </span>
-      <div className={`row-sub-menu${activeSubMenu ? ' grid' : ' hidden'}`} onClick={addActiveSpan}>
-        <div className="col-sub-menu">
+      <div
+        className={`row-sub-menu${
+          activeSubMenu
+            ? ' grid sm:absolute sm:right-0 sm:w-32 sm:bg-gray-50 sm:rounded-tl-md sm:rounded-bl-md sm:z-20 sm:px-3 sm:pt-1 sm:pb-3 sm:grid-cols-1 sm:shadow-btn'
+            : ' hidden'
+        }`}
+        onClick={addActiveSpan}
+      >
+        <div className="col-sub-menu" onClick={() => setActiveSubMenu(false)}>
           <Item to="/region" activeSubMenu={true}>
             <span className="sub-menu__text">Region</span>
           </Item>
         </div>
-        <div className="col-sub-menu">
+        <div className="col-sub-menu" onClick={() => setActiveSubMenu(false)}>
           <Item to="/pokedex" activeSubMenu={true}>
             <span className="sub-menu__text">Pokedex</span>
           </Item>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-const Item: React.FC<TItem> = ({ to, children, activeSubMenu }) => {
+export const Item: React.FC<TItem> = ({ to, children, activeSubMenu }) => {
   const { setCollapsedSider } = useCollapseContext();
-  const direction = useContext(MenuContext);
+  const { width } = useWindowSize();
+  const direction = width > 640 ? Direction.Horizontal : Direction.Vertical;
 
   return (
     <>
@@ -156,7 +235,7 @@ const Item: React.FC<TItem> = ({ to, children, activeSubMenu }) => {
         activeClassName="active"
         className={`${activeSubMenu ? 'sub-menu__item menu__item--horizontal' : 'menu__item'} ${
           direction === Direction.Horizontal ? 'menu__item--horizontal' : 'menu__item--vertical'
-        }`}
+        } sm:text-center`}
         onClick={() => setCollapsedSider(true)}
       >
         {children}

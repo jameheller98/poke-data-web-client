@@ -25,6 +25,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
+    "rss-parser": "^3.12.0",
     "sass": "^1.34.1",
     "typescript": "^4.3.5",
     "use-constant": "^1.1.0",

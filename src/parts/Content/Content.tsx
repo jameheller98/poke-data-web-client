@@ -6,7 +6,7 @@ type ContentProps = {
 
 const Content: React.FC<ContentProps> = ({ children }) => (
   <>
-    <div className="container h-full w-screen bg-gray-100 pb-16">{children}</div>
+    <div className="container m-auto h-full w-full bg-gray-100 pb-16 sm:mt-10 lg:px-16">{children}</div>
   </>
 );
 

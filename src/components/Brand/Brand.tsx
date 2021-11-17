@@ -3,7 +3,7 @@ import { ReactComponent as Logo } from '../../pokeball.svg';
 const Brand: React.FC = () => (
   <>
     <div className="inline-block">
-      <Logo width={120} height={70} />
+      <Logo className="h-12 sm:h-10" />
     </div>
   </>
 );

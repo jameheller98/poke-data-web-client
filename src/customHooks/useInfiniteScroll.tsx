@@ -2,13 +2,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect } from 'react';
 
-const useInfiniteScroll = (scrollRef: any, dispatch: any, fnSetNextOffset: () => void): void => {
+const useInfiniteScroll = (scrollRef: any, dispatch: any, setNextOffset: any): void => {
   const scrollObserver = useCallback(
     (node) => {
       new IntersectionObserver((entries) => {
         entries.forEach((en) => {
-          if (en.intersectionRatio > 0) {
-            dispatch(fnSetNextOffset());
+          if (en.isIntersecting) {
+            dispatch(setNextOffset());
           }
         });
       }).observe(node);

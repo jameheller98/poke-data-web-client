@@ -26,6 +26,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const backToHead = () => {
     const offsetHeightHeader = headerRef.current && headerRef.current?.offsetHeight;
     const offsetHeightFooter = footerRef.current && footerRef.current?.offsetHeight;
+
     if (offsetHeightHeader && offsetHeightFooter && window.scrollY > offsetHeightHeader * 2) {
       return setActiveBackToHead(true);
     }
@@ -39,7 +40,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       offsetHeightHeader &&
       offsetHeightFooter &&
       offsetHeightContent &&
-      window.scrollY + 80 > offsetHeightContent - 2 * offsetHeightHeader - 2 * offsetHeightFooter
+      window.scrollY + 80 > offsetHeightContent - 2 * offsetHeightHeader - 2 * offsetHeightFooter &&
+      window.scrollY > offsetHeightHeader
     ) {
       return setActiveForwardToFooter(true);
     }

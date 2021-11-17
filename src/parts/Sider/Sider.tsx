@@ -28,7 +28,7 @@ const Sider: React.FC<SiderType> = ({ children }) => {
           ref={wrapperRef}
           className={`transform ${
             collapsedSider ? 'translate-x-full' : 'translate-x-0'
-          } w-screen-75 transition-all fixed h-screen right-0 top-0 bg-gray-50 z-10 border-indigo-900 border-t-4 border-opacity-90`}
+          } w-screen-75 transition-all fixed h-screen right-0 top-0 bg-gray-50 z-20 border-indigo-900 border-t-4 border-opacity-90`}
         >
           {children}
         </div>

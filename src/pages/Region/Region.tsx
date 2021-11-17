@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRegion, selectDataRegion, toggleActiveItem, setCurrentItem } from './RegionSlice';
@@ -7,7 +7,7 @@ import Error from '../Error';
 import data from './dataRegionDescription.json';
 import { DocumentIcon, DocumentTextIcon } from '@heroicons/react/solid';
 import './index.scss';
-
+import useWindowSize from '../../customHooks/useWindowSize';
 const dataRegionDescription: { [key: string]: string } = data;
 
 const ListRegion: React.FC = () => {
@@ -19,7 +19,7 @@ const ListRegion: React.FC = () => {
   const mapCount: {
     [key: number]: string[];
     count: number;
-  } = { count: 0, [dataRegion.length + 1]: ['row-start-5', 'col-start-1', 'col-end-3'] };
+  } = { count: 0, [dataRegion?.length + 1]: ['row-start-5', 'col-start-1', 'col-end-3'] };
   const listClassOdd = ['row-start-1', 'row-start-2', 'row-start-3', 'row-start-4'];
   const dispatch = useDispatch();
 
@@ -30,20 +30,6 @@ const ListRegion: React.FC = () => {
     document.querySelectorAll('link[rel=preload]').forEach((e: { parentNode: any }) => e.parentNode.removeChild(e));
   }, []);
 
-  if (loading) {
-    const listLoadingItem = [...Array(8)].map((_, index) => (
-      <div key={index} className="h-44 w-48 bg-gray-200 bg-opacity-90 rounded-lg p-3">
-        <div className="animate-pulse h-28 w-40 m-auto bg-gray-300 rounded-2xl shadow-btn" />
-        <div className="animate-pulse m-auto mt-4 h-5 w-40 text-2xl font-semibold bg-gray-300 rounded-2xl shadow-btn" />
-      </div>
-    ));
-    return <div className="grid grid-cols-2 gap-4 p-3 bg-gray-100 fixed">{listLoadingItem}</div>;
-  }
-
-  if (error) {
-    return <Error error={error} />;
-  }
-
   const allCard = dataRegion?.results?.map(({ name }: { name: string }, index: number) => {
     mapCount[index] = (
       index % 2 !== 0 ? listClassOdd[mapCount.count++] + ' col-start-1 col-end-3' : 'col-span-2'
@@ -51,11 +37,38 @@ const ListRegion: React.FC = () => {
     return <ListRegionItem key={index} name={name} index={index} mapCount={mapCount} />;
   });
 
+  const memoziedAllCard = useMemo(() => allCard, [dataRegion]);
+
+  if (loading) {
+    const listLoadingItem = [...Array(8)].map((_, index) => (
+      <div key={index} className="h-44 w-full bg-gray-200 bg-opacity-90 rounded-lg p-3">
+        <div className="animate-pulse h-28 w-full m-auto bg-gray-300 rounded-2xl shadow-btn" />
+        <div className="animate-pulse m-auto mt-4 h-5 w-full text-2xl font-semibold bg-gray-300 rounded-2xl shadow-btn" />
+      </div>
+    ));
+    return (
+      <div className="p-3">
+        <div className="h-16 w-1/2 bg-gray-300 m-auto mt-6"></div>
+        <div className="animate-pulse h-10 w-full bg-gray-300 rounded-md mt-10"></div>
+        <div className="grid grid-cols-2 gap-4 p-3 bg-gray-100 w-screen mt-16">{listLoadingItem}</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <Error error={error} />;
+  }
+
   return (
     <>
       <h1 className="font-medium text-5xl text-gray-800 tracking-wider text-center py-5 font-serif">Regions</h1>
-      <details className="bg-gray-50 text-gray-800 text-opacity-80 text-xl m-3 p-3 mb-10 shadow-inner rounded-lg">
-        <summary onClick={() => setIsOpen(!isOpen)} className="flex items-center">
+      <details
+        className="bg-gray-50 text-gray-800 text-opacity-80 text-xl m-3 p-3 mb-10 shadow-inner rounded-lg"
+        onToggle={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        <summary className="flex items-center">
           {isOpen ? (
             <DocumentTextIcon className="inline-block h-6 mr-2" />
           ) : (
@@ -65,7 +78,7 @@ const ListRegion: React.FC = () => {
         </summary>
         <blockquote
           cite="https://pokemon.fandom.com/wiki/Regions"
-          className="bg-gray-50 text-gray-800 text-opacity-80 text-xl mt-3 pt-3 overflow-auto h-52"
+          className="bg-gray-50 text-gray-800 text-opacity-80 text-xl mt-3 pt-3 overflow-auto h-52 lg:h-fit-content"
         >
           <dfn>Regions</dfn> are areas in the Pokémon universe that are smaller parts of a nation. Each region has their
           own <cite>Pokémon Professor</cite>, who provides a unique set of Starter Pokémon for young Trainers. Each
@@ -74,10 +87,11 @@ const ListRegion: React.FC = () => {
           <cite>Elite Four</cite> divisions, such as <cite>Johto</cite> and <cite>Kanto</cite>.
         </blockquote>
       </details>
-      <section className="grid grid-cols-2 gap-4 p-3">{allCard}</section>
+      <section className="grid grid-cols-2 gap-4 p-3 md:grid-cols-3 lg:grid-cols-4">{memoziedAllCard}</section>
     </>
   );
 };
+
 type TRegionItem = {
   index: number;
   name: string;
@@ -85,6 +99,7 @@ type TRegionItem = {
 };
 
 const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
+  const { width } = useWindowSize();
   const activeItem = useSelector((state: { region: { activeItem: boolean } }) => state.region.activeItem);
   const currentItem = useSelector((state: { region: { currentItem: number } }) => state.region.currentItem);
   const imageData = useSelector((state: { region: { imageData: Record<string, ''>[] } }) => state.region.imageData);
@@ -100,7 +115,7 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
 
   const onActiveItem = (e: React.MouseEvent, index: number, mapCount: { [key: number]: string[] }) => {
     const tagLink = e.target as HTMLElement;
-    if (tagLink.tagName === 'A') {
+    if (tagLink.tagName === 'A' || tagLink.tagName === 'H2') {
       return;
     }
     dispatch(setCurrentItem(index));
@@ -127,7 +142,7 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
       <article
         className="h-fit-content last:h-full"
         onClick={(e) => {
-          onActiveItem(e, index, mapCount);
+          if (width < 640) onActiveItem(e, index, mapCount);
         }}
       >
         <div
@@ -140,7 +155,7 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
               <source media="(min-width: 768px)" srcSet={imageData[index]?.large} />
               <img
                 src={imageData[index]?.small}
-                className="rounded-lg shadow-btn"
+                className="rounded-lg shadow-btn m-auto"
                 width="600px"
                 height="424px"
                 alt={name}
@@ -151,7 +166,7 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
                 activeItem && currentItem === index ? 'text-3xl opacity-90' : 'text-2xl opacity-80'
               } font-semibold tracking-wide text-gray-800 transition-all inline-block pt-1 underline float-left`}
             >
-              <Link to={`region/${name}`} rel="preconnect" className="capitalize">
+              <Link to={`region/${name}`} rel="preconnect" className="capitalize" onClick={() => window.scrollTo(0, 0)}>
                 <h2>{name}</h2>
               </Link>
             </figcaption>{' '}
@@ -161,7 +176,9 @@ const ListRegionItem: React.FC<TRegionItem> = ({ index, name, mapCount }) => {
             className={`${
               activeItem && currentItem === index
                 ? 'text-xl pt-3 text-opacity-80 '
-                : 'text-lg truncate pt-2 text-opacity-90 '
+                : width < 640
+                ? 'text-lg truncate pt-2 text-opacity-90 '
+                : 'text-lg pt-2 text-opacity-90 '
             }text-gray-700`}
           >
             &nbsp;- {dataRegionDescription[name]}

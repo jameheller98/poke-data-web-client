@@ -1,33 +1,32 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
-import Home from './pages/Home';
 import './App.css';
-import RouterRegion from './pages/Region/RouterRegion';
-import RouterPokedex from './pages/Pokedex/RouterPokedex';
+import RouteWithSubRoutes from './components/RouteWithSubRoutes';
+import { routes, privateRoutes } from './configRouter';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchCurrentUser } from './pages/Auth/AuthSlice';
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser);
+  }, []);
+
   return (
     <>
       <Router>
-        <Switch>
-          <Route exact path="/">
-            <MainLayout>
-              <Home />
-            </MainLayout>
-          </Route>
-          <Route path="/about-us">
-            <MainLayout>
-              <div>About us</div>
-            </MainLayout>
-          </Route>
-          <Route path="/Contact">
-            <MainLayout>
-              <div>Contact</div>
-            </MainLayout>
-          </Route>
-        </Switch>
-        <RouterPokedex />
-        <RouterRegion />
+        <MainLayout>
+          <Switch>
+            {privateRoutes.map((route, index) => {
+              return <RouteWithSubRoutes key={index} {...route} />;
+            })}
+            {routes.map((route, index) => {
+              return <RouteWithSubRoutes key={index} {...route} />;
+            })}
+          </Switch>
+        </MainLayout>
       </Router>
     </>
   );

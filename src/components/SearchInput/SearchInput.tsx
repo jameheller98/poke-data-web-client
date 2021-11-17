@@ -7,7 +7,7 @@ const SearchInput: React.FC<{
   clearSearchValue: () => void;
 }> = ({ searchValue, onChangeSearchValue, clearSearchValue }) => (
   <>
-    <div className="col-start-1 col-end-3 border-none bg-gray-200 bg-opacity-50 flex items-center mx-3 my-2">
+    <div className="col-start-1 col-end-3 border-none bg-gray-200 flex items-center mx-3 my-2 lg:col-end-5">
       <SearchIcon className="w-6 mx-3 my-2 inline-block text-gray-400" />
       <input
         className="h-6 bg-transparent text-xl outline-none text-gray-700 w-9/12"

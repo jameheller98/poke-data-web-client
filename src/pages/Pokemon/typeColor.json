@@ -1,0 +1,20 @@
+{
+  "normal": "bg-gray-light",
+  "fire": "bg-red-500",
+  "water": "bg-blue-500",
+  "electric": "bg-yellow-300",
+  "grass": "bg-green-500",
+  "ice": "bg-blue-300",
+  "fighting": "bg-yellow-700",
+  "poison": "bg-poison",
+  "ground": "bg-ground",
+  "flying": "bg-indigo-400",
+  "psychic": "bg-psychic",
+  "bug": "bg-green-light",
+  "rock": "bg-rock",
+  "ghost": "bg-ghost",
+  "dragon": "bg-dragon",
+  "dark": "bg-yellow-900",
+  "steel": "bg-steel",
+  "fairy": "bg-pink-300"
+}
